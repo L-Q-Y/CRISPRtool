@@ -7,7 +7,7 @@ A Deep Learning-based Ensemble Method for Customized Optimal CRISPR sgRNA Design
 ## API Link [here](https://github.com/lijcheng12/DGCyTOF/blob/main/DGCyTOF_Package/docs/API.md)
 
 ## What is CRISPRtool
-
+We develop an adaptive ensemble model, CRISPRtool, which utilizes context-based sequence features to enhance the design of on-target sgRNAs within CRISPR/Cas9 and Cas12 systems (Figure 2(a)). After each model is trained parallelly on training sets, when making prediction on test sets, CRISPRtool will adaptively select the best model by comprehensively considering the seven ensemble indicators, that is, assigning the same weight to each indicator and then multiplying its order among all models. CRISPRtool integrates six parallel deep learning-based models, including two previously proposed models (DeepCRISPR and Seq-deepCpf1) and four our customized models (Cas9/Cas12_SimpleRNN, Cas9/Cas12_BiLSTM, Cas9/Cas12_Attention, and Cas9/Cas12_Transformer). Following subsections describe the details of the architecture of four customized deep learning-based models, seven ensemble metrics, and the implementation of CRISPRtool.
 
 ## Features
 
@@ -35,37 +35,23 @@ Feel free to contact [Dr. Lijun Cheng](https://medicine.osu.edu/find-faculty/non
 
 ### Creating from source
 
-After creating your desired environment, run the following under package folder
 
 ```
-python setup.py sdist
-pip install dist/DGCyTOF-1.0.0.tar.gz --user
+git clone https://github.com/zhushijia/STIE.git
 ```
 
 ### Requirements
 
-The project requires several packages to work appropriately. These packages and their versions can be found within requirements.txt or alternatively down below.
+The Python packages and their versions used in this project can be found within requirements.txt.
 
-```
-scipy==1.5.2
-numpy==1.19.1
-seaborn==0.10.1
-matplotlib==3.3.0
-pandas==1.1.0
-umap_learn==0.4.6
-hdbscan==0.8.26
-scikit_learn==0.23.2
-scikit_plot==0.3.7
-scikit_bio==0.5.6
-umap-learn==0.4.6
-torch==1.6.0
-torchvision==0.7.0
-tensorboard==2.3.0
-```
 
 ## Demo Usage
 
+After creating your desired environment, you can run the demo case study followed by this tutorial:
 
+```
+
+```
 
 
 
