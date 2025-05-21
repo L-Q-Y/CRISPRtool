@@ -54,6 +54,8 @@ After creating your desired environment, you can run the demo case study followe
 ```
 
 
+## Citation
+Qingyang Liu, Wentian Wang, Yueze Liu, Jain Akanksha1, Yimin Liu, and Lijun Cheng. CRISPRtool: a Deep Learning for Customized Optimal CRISPR sgRNA Design. Nature Communications. 2025 (under review)
 
 
 
