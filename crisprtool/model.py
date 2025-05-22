@@ -1,6 +1,6 @@
 from keras import Model
 from keras import regularizers
-from keras.layers import Conv2D, BatchNormalization, ReLU, Input, Flatten
+from keras.layers import Conv2D, BatchNormalization, ReLU, Input, Flatten, Convolution1D
 from keras.layers import Dense, GlobalAveragePooling2D, Dropout
 from keras.layers import AveragePooling1D, Bidirectional, LSTM, GlobalAveragePooling1D
 from keras.layers import LayerNormalization, Conv1D, MultiHeadAttention, Layer, SimpleRNN
@@ -299,6 +299,217 @@ def Cas9_Transformer(input_shape):
     model = Model(inputs=[input], outputs=[output])
     return model
 
+
+
+def Seq_deepCpf1(input_shape):
+    Seq_deepCpf1_Input_SEQ = Input(shape=input_shape)
+
+    Seq_deepCpf1_C1 = Convolution1D(80, 5, activation='relu')(Seq_deepCpf1_Input_SEQ)
+    Seq_deepCpf1_P1 = AveragePooling1D(2)(Seq_deepCpf1_C1)
+    Seq_deepCpf1_F = Flatten()(Seq_deepCpf1_P1)
+    Seq_deepCpf1_DO1 = Dropout(0.3)(Seq_deepCpf1_F)
+    Seq_deepCpf1_D1 = Dense(80, activation='relu')(Seq_deepCpf1_DO1)
+    Seq_deepCpf1_DO2 = Dropout(0.3)(Seq_deepCpf1_D1)
+    Seq_deepCpf1_D2 = Dense(40, activation='relu')(Seq_deepCpf1_DO2)
+    Seq_deepCpf1_DO3 = Dropout(0.3)(Seq_deepCpf1_D2)
+    Seq_deepCpf1_D3 = Dense(40, activation='relu')(Seq_deepCpf1_DO3)
+    Seq_deepCpf1_DO4 = Dropout(0.3)(Seq_deepCpf1_D3)
+
+    Seq_deepCpf1_Output = Dense(1, activation='linear')(Seq_deepCpf1_DO4)
+    Seq_deepCpf1 = Model(inputs=[Seq_deepCpf1_Input_SEQ], outputs=[Seq_deepCpf1_Output])
+    return Seq_deepCpf1
+
+
+
+def Cas12_SimpleRNN(input_shape):
+    dropout_rate = 0.2
+    input = Input(shape=input_shape)
+
+    conv1 = Conv1D(128, 5, activation="relu")(input)
+    pool1 = AveragePooling1D(2)(conv1)
+    drop1 = Dropout(dropout_rate)(pool1)
+
+    conv2 = Conv1D(128, 5, activation="relu")(drop1)
+    pool2 = AveragePooling1D(2)(conv2)
+    drop2 = Dropout(dropout_rate)(pool2)
+
+    srnn1 = SimpleRNN(32,
+                      dropout=dropout_rate,
+                      activation="tanh",
+                      return_sequences=True,
+                      kernel_regularizer=regularizers.l2(0.01))(drop2)
+    srnn2 = SimpleRNN(32,
+                      dropout=dropout_rate,
+                      activation="tanh",
+                      return_sequences=True,
+                      kernel_regularizer=regularizers.l2(0.01))(srnn1)
+    avgpool = GlobalAveragePooling1D()(srnn2)
+
+    dense1 = Dense(512,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(avgpool)
+    drop3 = Dropout(dropout_rate)(dense1)
+
+    dense2 = Dense(512,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(drop3)
+    drop4 = Dropout(dropout_rate)(dense2)
+
+    dense3 = Dense(512,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(drop4)
+    drop5 = Dropout(dropout_rate)(dense3)
+
+    output = Dense(1, activation='linear')(drop5)
+    model = Model(inputs=[input], outputs=[output])
+
+    return model
+
+
+
+def Cas12_BiLSTM(input_shape):
+    input = Input(shape=input_shape)
+
+    conv1 = Conv1D(128, 5, activation="relu")(input)
+    pool1 = AveragePooling1D(2)(conv1)
+    drop1 = Dropout(0.1)(pool1)
+
+    conv2 = Conv1D(128, 5, activation="relu")(drop1)
+    pool2 = AveragePooling1D(2)(conv2)
+    drop2 = Dropout(0.1)(pool2)
+
+    lstm1 = Bidirectional(LSTM(128,
+                               dropout=0.1,
+                               activation='tanh',
+                               return_sequences=True,
+                               kernel_regularizer=regularizers.l2(1e-4)))(drop2)
+    avgpool = GlobalAveragePooling1D()(lstm1)
+
+    dense1 = Dense(128,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(avgpool)
+    drop3 = Dropout(0.1)(dense1)
+
+    dense2 = Dense(32,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(drop3)
+    drop4 = Dropout(0.1)(dense2)
+
+    dense3 = Dense(32,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(drop4)
+    drop5 = Dropout(0.1)(dense3)
+
+    output = Dense(1, activation="linear")(drop5)
+
+    model = Model(inputs=[input], outputs=[output])
+    return model
+
+
+
+def Cas12_MultiHeadAttention(input_shape):
+    input = Input(shape=input_shape)
+
+    conv1 = Conv1D(512, 5, activation="relu")(input)
+    pool1 = AveragePooling1D(2)(conv1)
+    drop1 = Dropout(0.4)(pool1)
+
+    conv2 = Conv1D(512, 5, activation="relu")(drop1)
+    pool2 = AveragePooling1D(2)(conv2)
+    drop2 = Dropout(0.4)(pool2)
+
+    lstm = Bidirectional(LSTM(16,
+                               dropout=0.5,
+                               activation='tanh',
+                               return_sequences=True,
+                               kernel_regularizer=regularizers.l2(0.01)))(drop2)
+
+    pos_embedding = PositionalEncoding(sequence_len=int(((34-5+1)/2-5+1)/2), embedding_dim=2*16)(lstm)
+    atten = MultiHeadAttention(num_heads=2,
+                               key_dim=32,
+                               dropout=0.5,
+                               kernel_regularizer=regularizers.l2(0.01))(pos_embedding, pos_embedding)
+
+    flat = Flatten()(atten)
+
+    dense1 = Dense(256,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(flat)
+    drop3 = Dropout(0.2)(dense1)
+
+    dense2 = Dense(128,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(drop3)
+    drop4 = Dropout(0.2)(dense2)
+
+    dense3 = Dense(512,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(drop4)
+    drop5 = Dropout(0.2)(dense3)
+
+    output = Dense(1, activation="linear")(drop5)
+
+    model = Model(inputs=[input], outputs=[output])
+    return model
+
+
+
+def Cas12_Transformer(input_shape):
+    input = Input(shape=input_shape)
+    conv1 = Conv1D(512, 5, activation="relu")(input)
+    pool1 = AveragePooling1D(2)(conv1)
+    drop1 = Dropout(0.4)(pool1)
+
+    conv2 = Conv1D(512, 5, activation="relu")(drop1)
+    pool2 = AveragePooling1D(2)(conv2)
+    drop2 = Dropout(0.4)(pool2)
+
+    lstm1 = Bidirectional(LSTM(32,
+                               dropout=0.2,
+                               activation='tanh',
+                               return_sequences=True,
+                               kernel_regularizer=regularizers.l2(0.01)))(drop2)
+    lstm2 = Bidirectional(LSTM(64,
+                               dropout=0.2,
+                               activation='tanh',
+                               return_sequences=True,
+                               kernel_regularizer=regularizers.l2(0.01)))(lstm1)
+
+    pos_embedding = PositionalEncoding(sequence_len=int(((34-5+1)/2-5+1)/2), embedding_dim=2*64)(lstm2)
+    trans = TransformerBlock(embed_dim=2*64, num_heads=2, ff_dim=256, dropout_rate=0.3)(pos_embedding)
+    avgpool = GlobalAveragePooling1D()(trans)
+
+    dense1 = Dense(512,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(avgpool)
+    drop3 = Dropout(0.1)(dense1)
+
+    dense2 = Dense(256,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(drop3)
+    drop4 = Dropout(0.1)(dense2)
+
+    dense3 = Dense(16,
+                   kernel_regularizer=regularizers.l2(1e-4),
+                   bias_regularizer=regularizers.l2(1e-4),
+                   activation="relu")(drop4)
+    drop5 = Dropout(0.1)(dense3)
+
+    output = Dense(1, activation="linear")(drop5)
+
+    model = Model(inputs=[input], outputs=[output])
+    return model
 
 
 

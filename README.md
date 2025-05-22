@@ -1,5 +1,5 @@
 # CRISPRtool
-A Deep Learning-based Ensemble Method for Customized Optimal CRISPR sgRNA Design
+A Deep Learning-based Adaptive Ensemble Method for Customized Optimal CRISPR sgRNA Design
 
 ![Framework](./Figures/ensemble_model.jpg)
 
@@ -53,7 +53,7 @@ pip install -r requirements.txt
 The Python packages and their versions used in this project can be found within requirements.txt.
 
 
-## Demo Usage
+## Tutorial
 The main applications of CRISPRtool include two parts:
 
 * Adaptively select the most suitable model based on user provided data

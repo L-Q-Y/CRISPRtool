@@ -12,26 +12,43 @@ from model import (
     Cas9_BiLSTM,
     Cas9_SimpleRNN,
     Cas9_MultiHeadAttention,
-    Cas9_Transformer
+    Cas9_Transformer,
+    Cas12_BiLSTM,
+    Cas12_SimpleRNN,
+    Cas12_MultiHeadAttention,
+    Cas12_Transformer,
+    Seq_deepCpf1
 )
-from utils import PREPROCESS, PREPROCESS_for_DeepCRISPR
+from utils import PREPROCESS_cas9, PREPROCESS_cas12, PREPROCESS_for_DeepCRISPR
 
 
 
-def load_data(path):
+def load_data(path, group):
     with open(path, 'r') as f:
         lines = f.readlines()
 
-    x_test, y_test = PREPROCESS(lines)
-    x_deepcrispr, _ = PREPROCESS_for_DeepCRISPR(lines)
+    if group == 'cas9':
+        x_test, y_test = PREPROCESS_cas9(lines)
+        x_deepcrispr, _ = PREPROCESS_for_DeepCRISPR(lines)
 
-    return {
-        'DeepCRISPR':     x_deepcrispr,
-        'Cas9_BiLSTM':    x_test,
-        'Cas9_SimpleRNN': x_test,
-        'Cas9_MultiHeadAttention': x_test,
-        'Cas9_Transformer':       x_test
-    }, y_test
+        return {
+            'DeepCRISPR':     x_deepcrispr,
+            'Cas9_BiLSTM':    x_test,
+            'Cas9_SimpleRNN': x_test,
+            'Cas9_MultiHeadAttention': x_test,
+            'Cas9_Transformer':       x_test
+        }, y_test
+    
+    elif group == 'cas12':
+        x_test, y_test = PREPROCESS_cas12(lines)
+
+        return {
+            'Seq_deepCpf1':     x_test,
+            'Cas12_BiLSTM':         x_test,
+            'Cas12_SimpleRNN':      x_test,
+            'Cas12_MultiHeadAttention': x_test,
+            'Cas12_Transformer':    x_test
+        }, y_test
 
 
 def compute_metrics(y_true, pred_score, cutoff=60):
@@ -55,30 +72,42 @@ def compute_metrics(y_true, pred_score, cutoff=60):
     return mets
 
 
-def evaluate_all(data_path, weight_paths, cutoff, metric_weights=None):
+def evaluate_all(group, data_path, weight_paths, cutoff, metric_weights=None):
 
     all_metrics = ['Spearman','Accuracy','F1','Precision','Recall','ROC_AUC','PR_AUC']
     if metric_weights is None:
         metric_weights = {m: 1.0 for m in all_metrics}
 
-    x_dict, y_true = load_data(data_path)
+    x_dict, y_true = load_data(data_path, group)
 
-    constructors = {
-        'DeepCRISPR':            DeepCRISPR,
-        'Cas9_BiLSTM':           Cas9_BiLSTM,
-        'Cas9_SimpleRNN':        Cas9_SimpleRNN,
-        'Cas9_MultiHeadAttention': Cas9_MultiHeadAttention,
-        'Cas9_Transformer':      Cas9_Transformer
-    }
+    if group == 'cas9':
+        constructors = {
+            'DeepCRISPR':            DeepCRISPR,
+            'Cas9_BiLSTM':           Cas9_BiLSTM,
+            'Cas9_SimpleRNN':        Cas9_SimpleRNN,
+            'Cas9_MultiHeadAttention': Cas9_MultiHeadAttention,
+            'Cas9_Transformer':      Cas9_Transformer
+        }
+    else:
+        constructors = {
+            'Seq_deepCpf1':          Seq_deepCpf1,
+            'Cas12_BiLSTM':         Cas12_BiLSTM,
+            'Cas12_SimpleRNN':      Cas12_SimpleRNN,
+            'Cas12_MultiHeadAttention': Cas12_MultiHeadAttention,
+            'Cas12_Transformer':    Cas12_Transformer
+        }
 
     metrics_dict = {}
 
     for name, ctor in constructors.items():
         x_test = x_dict[name]
-        if "DeepCRISPR" in name:
-            shape = (1, 23, 4)
+        if group == 'cas9':
+            if "DeepCRISPR" in name:
+                shape = (1, 23, 4)
+            else:
+                shape = (23, 4)
         else:
-            shape = (23, 4)
+            shape = (34, 4)
         model = ctor(input_shape=shape)
         if name in weight_paths:
             model.load_weights(weight_paths[name])
@@ -123,11 +152,11 @@ if __name__ == '__main__':
         }
     else:
         weight_paths = {
-            'DeepCRISPR_Cas12':     f"{args.weights_dir}/DeepCRISPR_Cas12.h5",
-            'Cas12_BiLSTM':         f"{args.weights_dir}/Cas12_BiLSTM.h5",
-            'Cas12_SimpleRNN':      f"{args.weights_dir}/Cas12_SimpleRNN.h5",
-            'Cas12_MultiHeadAttention': f"{args.weights_dir}/Cas12_MultiHeadAttention.h5",
-            'Cas12_Transformer':    f"{args.weights_dir}/Cas12_Transformer.h5"
+            'Seq_deepCpf1':     f"{args.weights_dir}/Seq_deepCpf1_weights.keras",
+            'Cas12_BiLSTM':         f"{args.weights_dir}/BiLSTM_Cpf1_weights.keras",
+            'Cas12_SimpleRNN':      f"{args.weights_dir}/SimpleRNN_Cpf1_weights.keras",
+            'Cas12_MultiHeadAttention': f"{args.weights_dir}/MultiHeadAttention_Cpf1_weights.keras",
+            'Cas12_Transformer':    f"{args.weights_dir}/Transformer_Cpf1_weights.keras"
         }
     
     metric_weights = {
@@ -141,8 +170,8 @@ if __name__ == '__main__':
     }
 
     df_m, df_r, best = evaluate_all(
+        group=args.group,
         data_path=args.data,
-        #group=args.group,
         weight_paths=weight_paths,
         cutoff=args.cutoff,
         metric_weights=metric_weights
