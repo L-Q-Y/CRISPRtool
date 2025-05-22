@@ -62,6 +62,7 @@ The main applications of CRISPRtool include two parts:
 ### For application 1:
 Users can choose the model that best fits their data by running the code through the terminal as follows:
 ```
+cd path/to/CRISPRtool
 python crisprtool/model_selection.py --group cas9 --data data/Cas9/Kim2019_test.csv --weights-dir saved_models/Cas9 --cutoff 80
 ```
 
@@ -84,6 +85,32 @@ Cas9_BiLSTM                   3.0       4.0  4.0        4.0     4.0      3.0    
 DeepCRISPR                    5.0       5.0  5.0        5.0     5.0      5.0     5.0           35.0 
 
 >> The best model is:  Cas9_MultiHeadAttention
+```
+
+or
+```
+cd path/to/CRISPRtool
+python crisprtool/model_selection.py --group cas12 --data data/Cas12/input_HT-1-2.csv --weights-dir saved_models/Cas12 --cutoff 60
+```
+```
+############ output ############
+=== Ensemble Metrics ===
+                          Spearman  Accuracy      F1  Precision  Recall  ROC_AUC  PR_AUC
+Seq_deepCpf1                0.7663    0.7879  0.7350     0.7350  0.7350   0.8740  0.7698
+Cas12_BiLSTM                0.7656    0.7895  0.7369     0.7369  0.7369   0.8741  0.7646
+Cas12_SimpleRNN             0.7336    0.7771  0.7215     0.7215  0.7215   0.8586  0.7515
+Cas12_MultiHeadAttention    0.7228    0.7709  0.7137     0.7137  0.7137   0.8549  0.7519
+Cas12_Transformer           0.7274    0.7678  0.7099     0.7099  0.7099   0.8523  0.7363 
+
+=== Rank ===
+                          Spearman  Accuracy   F1  Precision  Recall  ROC_AUC  PR_AUC  WeightedScore
+Cas12_BiLSTM                   2.0       1.0  1.0        1.0     1.0      1.0     2.0            9.0
+Seq_deepCpf1                   1.0       2.0  2.0        2.0     2.0      2.0     1.0           12.0
+Cas12_SimpleRNN                3.0       3.0  3.0        3.0     3.0      3.0     4.0           22.0
+Cas12_MultiHeadAttention       5.0       4.0  4.0        4.0     4.0      4.0     3.0           28.0
+Cas12_Transformer              4.0       5.0  5.0        5.0     5.0      5.0     5.0           34.0 
+
+>> The best model is:  Cas12_BiLSTM
 ```
 
 ### For application 2:
