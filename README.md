@@ -63,7 +63,9 @@ The main applications of CRISPRtool include two parts:
 Users can choose the model that best fits their data by running the code through the terminal as follows:
 ```
 python crisprtool/model_selection.py --group cas9 --data data/Cas9/Kim2019_test.csv --weights-dir saved_models/Cas9 --cutoff 80
+```
 
+```
 ############ output ############
 === Ensemble Metrics ===
                          Spearman  Accuracy      F1  Precision  Recall  ROC_AUC  PR_AUC
