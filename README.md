@@ -4,7 +4,7 @@ A Deep Learning-based Adaptive Ensemble Method for Customized Optimal CRISPR sgR
 ![Framework](./Figures/ensemble_model.jpg)
 
 
-## API Link [here](https://github.com/L-Q-Y/CRISPRtool/code)
+## API Link [here](https://github.com/L-Q-Y/CRISPRtool/crisprtool)
 
 ## What is CRISPRtool
 We develop an adaptive ensemble model, CRISPRtool, which integrates context-based sequence features with specific cell line characteristics to enhance the design of on-target sgRNAs within CRISPR/Cas9 and Cas12 systems (Figure a). After each model is trained parallelly on training sets, when making prediction on test sets, CRISPRtool will adaptively select the best model by comprehensively considering the seven ensemble indicators, that is, assigning the same weight to each indicator and then multiplying its order among all models. CRISPRtool integrates six parallel deep learning-based models, including two previously proposed models (DeepCRISPR and Seq-deepCpf1) and four our customized models, Cas9/Cas12_SimpleRNN, Cas9/Cas12_BiLSTM, Cas9/Cas12_Attention, and Cas9/Cas12_Transformer (Figure b-e). 
