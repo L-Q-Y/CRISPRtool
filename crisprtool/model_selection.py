@@ -1,6 +1,7 @@
 import argparse
 import numpy as np
 import pandas as pd
+import tensorflow as tf
 from scipy.stats import spearmanr
 from sklearn.metrics import (
     accuracy_score, f1_score, precision_score,
@@ -21,6 +22,8 @@ from model import (
 )
 from utils import PREPROCESS_cas9, PREPROCESS_cas12, PREPROCESS_for_DeepCRISPR
 
+np.random.seed(42)
+tf.random.set_seed(42)
 
 
 def load_data(path, group):
