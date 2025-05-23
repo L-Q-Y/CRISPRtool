@@ -7,9 +7,11 @@ A Deep Learning-based Adaptive Ensemble Method for Customized Optimal CRISPR sgR
 ## API Link [here](https://github.com/L-Q-Y/CRISPRtool/tree/main/crisprtool)
 
 ## What is CRISPRtool
-We develop an adaptive ensemble model, CRISPRtool, which integrates context-based sequence features with specific cell line characteristics to enhance the design of on-target sgRNAs within CRISPR/Cas9 and Cas12 systems (Figure a). After each model is trained parallelly on training sets, when making prediction on test sets, CRISPRtool will adaptively select the best model by comprehensively considering the seven ensemble indicators, that is, assigning the same weight to each indicator and then multiplying its order among all models. CRISPRtool integrates six parallel deep learning-based models, including two previously proposed models (DeepCRISPR and Seq-deepCpf1) and four our customized models, Cas9/Cas12_SimpleRNN, Cas9/Cas12_BiLSTM, Cas9/Cas12_Attention, and Cas9/Cas12_Transformer (Figure b-e). 
+The CRISPRtool is a deep learning-based adaptive ensemble method, integrating context-based sequence features with specific cell line characteristics to enhance the design of on-target sgRNAs within CRISPR/Cas9 and Cas12 systems (Figure a). CRISPRtool integrates six parallel deep learning-based models, including two previously proposed models (DeepCRISPR and Seq-deepCpf1) and four our customized models, Cas9/Cas12_SimpleRNN, Cas9/Cas12_BiLSTM, Cas9/Cas12_Attention, and Cas9/Cas12_Transformer (Figure b-e).  After each model is trained parallelly on training sets, when making prediction on test sets, CRISPRtool will adaptively select the best model by comprehensively considering the seven ensemble indicators, that is, assigning the same weight to each indicator and then multiplying its order among all models.
 
 We provide this tutorial to guide researchers using CRISPRtool in Python. Moreover, we also provide a wet-lab-friendly website that incorporates our powerful predictors for personalized design of on-target sgRNAs for arbitrary gene in CRISPR/Cas9 and Cas12 at https://huggingface.co/spaces/LfOreVEr/CRISPRtool.
+
+For more details, please refer to Qingyang Liu, Wentian Wang, Yueze Liu, Jain Akanksha1, Yimin Liu, and Lijun Cheng. CRISPRtool: a Deep Learning for Customized Optimal CRISPR sgRNA Design. Nature Communications. 2025 (under review).
 
 ## Features
 
@@ -62,7 +64,7 @@ cd path/to/CRISPRtool
 python crisprtool/model_selection.py --group cas12 --data data/Cas12/input_HT-1-2.csv --weights-dir saved_models/Cas12 --cutoff 60
 ```
 ```
-############ output ############
+### Output
 === Ensemble Metrics ===
                           Spearman  Accuracy      F1  Precision  Recall  ROC_AUC  PR_AUC
 Seq_deepCpf1                0.7663    0.7879  0.7350     0.7350  0.7350   0.8740  0.7698
@@ -84,13 +86,13 @@ Cas12_MultiHeadAttention       5.0       5.0  5.0        5.0     5.0      5.0   
 
 ### Arguments:
 - group: The system types of CRISPR that users are interested in.
-    - choose 'cas9' or 'cas12'
-- data: The data path in [/data](https://github.com/L-Q-Y/CRISPRtool/tree/main/data) forder or user defined data path. Note that the data format should be a CSV file, consistent with the data format in [/data](https://github.com/L-Q-Y/CRISPRtool/tree/main/data).
+    - Choose 'cas9' or 'cas12'
+- data: The data path in [/data](https://github.com/L-Q-Y/CRISPRtool/tree/main/data) forder or user defined data path. Note that the data format should be a CSV file, consistent with the data format in [/data](https://github.com/L-Q-Y/CRISPRtool/tree/main/data). Here is the explanation of the meaning of each column in CSV file:
     - Column 1: Index.
     - Column 2: 23-bp length sgRNA target sequence in Cas9 or 34-bp length sgRNA target sequence in Cas12.
     - Column 3: Numeric sgRNA efficacy value.
-- weights-dir: The path of pre-trained models, eg. in [/saved_models](https://github.com/L-Q-Y/CRISPRtool/tree/main/saved_models).
-    - If users want to select best model for Cas9 system, they can set the path to saved_models/Cas9.
+- weights-dir: The path of pre-trained models.
+    - Set 'saved_models/Cas9' if users's data is on Cas9 system or 'saved_models/Cas12' if the CRISPR system is Cas12.
 - cutoff: The percentile cutoff for binarization evaluation.
     - For example, if the cutoff is set to 60, which means sgRNAs associated with the top 40% of efficacy are regard as active sgRNAs.
 
@@ -106,7 +108,7 @@ Cas12_MultiHeadAttention       5.0       5.0  5.0        5.0     5.0      5.0   
 
 
 ## Citation
-Qingyang Liu, Wentian Wang, Yueze Liu, Jain Akanksha1, Yimin Liu, and Lijun Cheng. CRISPRtool: a Deep Learning for Customized Optimal CRISPR sgRNA Design. Nature Communications. 2025 (under review)
+Qingyang Liu, Wentian Wang, Yueze Liu, Jain Akanksha1, Yimin Liu, and Lijun Cheng. CRISPRtool: a Deep Learning for Customized Optimal CRISPR sgRNA Design. Nature Communications. 2025 (under review).
 
 
 
