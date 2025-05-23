@@ -100,10 +100,71 @@ Cas12_MultiHeadAttention       5.0       5.0  5.0        5.0     5.0      5.0   
 
 ### For application 2:
 
+Once the best model is chosen from above step, users can use this model to design sgRNAs for any specific genes using following command:
+```
+cd path/to/CRISPRtool
+python crisprtool/sgrna_design.py --group cas12 --model Cas12_BiLSTM --gene FOXA1
+```
+The output is top 10 candidated sgRNAs printed out on termianl:
+```
+### Output
+Top 10 sgRNA candidates:
+Chrom    Start      End Strand      Transcript            Exon         Target sequence (5' to 3')                 gRNA  pred_Score
+   14 37591089 37591122     -1 ENST00000250448 ENSE00000995292 GAAGTTTAATGATCCACAAGTGTATATATGAAAT AUGAUCCACAAGUGUAUAUA   90.653717
+   14 37590422 37590455     -1 ENST00000250448 ENSE00000995292 TTAGTTTCTATGAGTGTATACCATTTAAAGAATT UAUGAGUGUAUACCAUUUAA   88.542549
+   14 37589629 37589662     -1 ENST00000250448 ENSE00000995292 TTAATTTAACTACCTTTCCTCCTTCCCCAATGTA ACUACCUUUCCUCCUUCCCC   85.031464
+   14 37594362 37594395     -1 ENST00000554607 ENSE00002524345 CCTATTTGGGGAGAAGTGTGCTCCTTCTCTAAAA GGGAGAAGUGUGCUCCUUCU   84.479034
+   14 37594034 37594067     -1 ENST00000554607 ENSE00002524345 TACTTTTAAGACGTGGACAGAAAAATATAGGATC AGACGUGGACAGAAAAAUAU   82.826775
+   14 37589935 37589968     -1 ENST00000250448 ENSE00000995292 TTTTTTTCACTTAACTAAATCCGAAGTGAATATT ACUUAACUAAAUCCGAAGUG   81.935814
+   14 37590388 37590421     -1 ENST00000250448 ENSE00000995292 TTTTTTTCAGTAAAAGGGAATATTACAATGTTGG AGUAAAAGGGAAUAUUACAA   79.052406
+   14 37594230 37594263     -1 ENST00000554607 ENSE00002524345 TATTTTTACAATGTGCACAAAAGGATTACAGGGA CAAUGUGCACAAAAGGAUUA   77.078995
+   14 37590640 37590673     -1 ENST00000250448 ENSE00000995292 TATATTTACATAACATATAGAGGTAATAGATAGG CAUAACAUAUAGAGGUAAUA   75.877060
+   14 37589653 37589686     -1 ENST00000250448 ENSE00000995292 GCCTTTTCACTACAAAATCAAATATTAATTTAAC ACUACAAAAUCAAAUAUUAA   74.779274
+```
 
+Alternatively, users can specify '--use-mutation' argument to design MDA-MB-231 cell line related sgRNAs with mutation infomation. The command and output show as follows. Note that the 'Is_mutation' column indicates whether there are any mutations in the target sequence. 
+```
+python crisprtool/sgrna_design.py --group cas9 --model Cas9_MultiHeadAttention --gene FOXA1 --use-mutation
+```
+```
+### Output
+Top 10 sgRNA candidates:
+ Gene Chrom Strand    Start      Transcript            Exon Target sequence (5' to 3')                 gRNA  pred_Score  Is_mutation
+FOXA1    14     -1 37591751 ENST00000545425 ENSE00002236311    CAGTGGGGCGACGGCGACAGGGG CAGUGGGGCGACGGCGACAG   72.893982        False
+FOXA1    14     -1 37592600 ENST00000545425 ENSE00002236311    TACGAGCGGCAACATGACCCCGG UACGAGCGGCAACAUGACCC   72.249321        False
+FOXA1    14     -1 37592600 ENST00000250448 ENSE00000995292    TACGAGCGGCAACATGACCCCGG UACGAGCGGCAACAUGACCC   71.779266        False
+FOXA1    14     -1 37591751 ENST00000250448 ENSE00000995292    CAGTGGGGCGACGGCGACAGGGG CAGUGGGGCGACGGCGACAG   70.598946        False
+FOXA1    14     -1 37591766 ENST00000250448 ENSE00000995292    CCAGACTCTGGACCACAGTGGGG CCAGACUCUGGACCACAGUG   70.583092        False
+FOXA1    14     -1 37594265 ENST00000554607 ENSE00002524345    CCTTGGTGGCACGTTCATGGGGG CCUUGGUGGCACGUUCAUGG   70.485741        False
+FOXA1    14     -1 37592600 ENST00000553751 ENSE00002500110    TACGAGCGGCAACATGACCCCGG UACGAGCGGCAACAUGACCC   70.253792        False
+FOXA1    14     -1 37591766 ENST00000545425 ENSE00002236311    CCAGACTCTGGACCACAGTGGGG CCAGACUCUGGACCACAGUG   70.103401        False
+FOXA1    14     -1 37592240 ENST00000250448 ENSE00000995292    GTACATCTCGCTCATCACCATGG GUACAUCUCGCUCAUCACCA   69.778252        False
+FOXA1    14     -1 37594212 ENST00000545425 ENSE00002318063    AGGGAAAACCAGTTACAGGGAGG AGGGAAAACCAGUUACAGGG   69.409035        False
+```
 
+If users want to get the whole sgRNAs design result, you can specify '--save-csv' argument, which allows you are able to download the generated CSV file from the current directory. Deom command is as follows:
+```
+python crisprtool/sgrna_design.py --group cas9 --model Cas9_MultiHeadAttention --gene FOXA1 --use-mutation --save-csv FOXA1_design.csv
+```
 
-
+### Arguments:
+- group: The system types of CRISPR that users are interested in.
+    - Choose 'cas9' or 'cas12'
+- model: The model recommended by model_selection.py, or any prefered model within the range of [DeepCRISPR,
+    Cas9_BiLSTM,
+    Cas9_SimpleRNN,
+    Cas9_MultiHeadAttention,
+    Cas9_Transformer,
+    Cas12_BiLSTM,
+    Cas12_SimpleRNN,
+    Cas12_MultiHeadAttention,
+    Cas12_Transformer,
+    Seq_deepCpf1].
+- gene: The gene you want to design.
+    - Choose one gene symbol per time.
+- use-mutation: If set, include mutation info from [/data/MDAMB231_mut](https://github.com/L-Q-Y/CRISPRtool/tree/main/data/MDAMB231_mut). If not set, only design sgRNAs based on reference sequences from Ensembl database.
+    - Note that only set this argument if you are interested in designing with MDA-MB-231 related mutations. As for other cell lines, we haven't provided enough mutation info to design so far.
+- save-csv: If set, the design result will be saved as a CSV file in the current directory for users to download. If not set, the script will only print out top 10 sgRNA candidates on terminal.
 
 
 
