@@ -9,8 +9,6 @@ A Deep Learning-based Adaptive Ensemble Method for Customized Optimal CRISPR sgR
 ## What is CRISPRtool
 The CRISPRtool is a deep learning-based adaptive ensemble method, integrating context-based sequence features with specific cell line characteristics to enhance the design of on-target sgRNAs within CRISPR/Cas9 and Cas12 systems (Figure a). CRISPRtool integrates six parallel deep learning-based models, including two previously proposed models (DeepCRISPR and Seq-deepCpf1) and four our customized models, Cas9/Cas12_SimpleRNN, Cas9/Cas12_BiLSTM, Cas9/Cas12_Attention, and Cas9/Cas12_Transformer (Figure b-e).  After each model is trained parallelly on training sets, when making prediction on test sets, CRISPRtool will adaptively select the best model by comprehensively considering the seven ensemble indicators, that is, assigning the same weight to each indicator and then multiplying its order among all models.
 
-We provide this tutorial to guide researchers using CRISPRtool in Python. Moreover, we also provide a wet-lab-friendly website that incorporates our powerful predictors for personalized design of on-target sgRNAs for arbitrary gene in CRISPR/Cas9 and Cas12 at https://huggingface.co/spaces/LfOreVEr/CRISPRtool.
-
 For more details, please refer to Qingyang Liu, Wentian Wang, Yueze Liu, Jain Akanksha1, Yimin Liu, and Lijun Cheng. CRISPRtool: a Deep Learning for Customized Optimal CRISPR sgRNA Design. Nature Communications. 2025 (under review).
 
 ## Features
@@ -20,6 +18,9 @@ The package allows for the following functions:
 * Adaptively select the most suitable model based on users provided data.
 * Custom design on-target sgRNAs given selected model.
 
+
+## Free Website
+We also provide a free wet-lab-friendly website that incorporates our powerful predictors for personalized design of on-target sgRNAs for arbitrary gene in CRISPR/Cas9 and Cas12 at https://huggingface.co/spaces/LfOreVEr/CRISPRtool, which is welcome for users without coding experience.
 
 
 ## Contact
@@ -39,6 +40,8 @@ git clone https://github.com/L-Q-Y/CRISPRtool.git
 
 Then, install desired packages:
 ```
+conda create -n crisprtool python=3.11
+conda activate crisprtool
 pip install -r requirements.txt
 ```
 
