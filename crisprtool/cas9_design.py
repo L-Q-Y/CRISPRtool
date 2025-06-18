@@ -375,7 +375,7 @@ def gRNADesign_mutation(gene_symbol, model_name, vcf_reader):
 
 def design_sgrnas_cas9(gene_symbol, model_name, use_mutation):
     if use_mutation:
-        mut_path = 'data/MDAMB231_mut/SRR25934512.filter.snps.indels.vcf.gz'
+        mut_path = 'data/MDAMB231_mut/SRR25934512.filter.snvs.indels.vcf.gz'
         vcf_reader = _load_mutations(mut_path)
         result_df = gRNADesign_mutation(gene_symbol, model_name, vcf_reader)
     else:
