@@ -1,16 +1,17 @@
 # CRISPRtool
-Adaptive Dual-Enzyme Deep Learning for Context-Dependent sgRNA Activity Prediction
+A Deep Learning Framework for Cellular Context-Specific and Variant-Aware gRNA Prediction and Design for SpCas9 and AsCas12a
 
-![Framework](./Figures/ensemble_model.jpg)
+
+![Framework](ensemble_model.jpg)
 
 
 ## API Link [here](https://github.com/L-Q-Y/CRISPRtool/tree/main/crisprtool)
 
 ## What is CRISPRtool
-The CRISPRtool is a deep learning-based adaptive ensemble method, integrating context-based sequence features with specific cell line characteristics to enhance the design of on-target sgRNAs within CRISPR/Cas9 and Cas12 systems (Figure a). CRISPRtool integrates six parallel deep learning-based models, including two previously proposed models (DeepCRISPR and Seq-deepCpf1) and four our customized models, Cas9/Cas12_SimpleRNN, Cas9/Cas12_BiLSTM, Cas9/Cas12_Attention, and Cas9/Cas12_Transformer (Figure b-e).  After each model is trained parallelly on training sets, when making prediction on test sets, CRISPRtool will adaptively select the best model by comprehensively considering the seven ensemble indicators, that is, assigning the same weight to each indicator and then multiplying its order among all models.
+CRISPRtool is a unified framework for context-specific gRNA prediction and design across SpCas9 and AsCas12a systems. Rather than relying on a fixed prediction model trained in a single biological context, CRISPRtool combines source model construction and benchmarking, cross-domain transfer learning, and variant-aware gRNA design into an integrated workflow. These three modules progressively address variability at the CRISPR system, cellular context, and target genome levels, enabling more accurate and biologically relevant gRNA prediction and design.
 
-For more details, please refer to Qingyang Liu, Wentian Wang, Shangjia Li, Yueze Liu, Jain Akanksha, Yirui Huang, Lingling Wang, Lang Li, and Lijun Cheng. CRISPRtool: Adaptive Dual-Enzyme Deep Learning for Context-Dependent sgRNA Activity Prediction.
 
+For more details, please refer to Qingyang Liu, Wentian Wang, Shangjia Li, Yueze Liu, Jain Akanksha, Yirui Huang, Lingling Wang, Lang Li, and Lijun Cheng. CRISPRtool: A Deep Learning Framework for Cellular Context-Specific and Variant-Aware gRNA Prediction and Design for SpCas9 and AsCas12a.
 
 ## Features
 
@@ -173,7 +174,7 @@ python crisprtool/sgrna_design.py --group cas9 --model Cas9_MultiHeadAttention -
 
 
 ## Citation
-Qingyang Liu, Wentian Wang, Shangjia Li, Yueze Liu, Jain Akanksha, Yirui Huang, Lingling Wang, Lang Li, and Lijun Cheng. CRISPRtool: Adaptive Dual-Enzyme Deep Learning for Context-Dependent sgRNA Activity Prediction.
+Qingyang Liu, Wentian Wang, Shangjia Li, Yueze Liu, Jain Akanksha, Yirui Huang, Lingling Wang, Lang Li, and Lijun Cheng. CRISPRtool: A Deep Learning Framework for Cellular Context-Specific and Variant-Aware gRNA Prediction and Design for SpCas9 and AsCas12a.
 
 
 
